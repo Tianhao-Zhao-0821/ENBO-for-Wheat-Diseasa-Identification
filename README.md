@@ -43,30 +43,31 @@
 ### 3.2 数据集结构
 
 仓库中`` WPLDD/ ``文件夹组织如下，图像均采集于小麦主产区田间（涵盖不同生育期、光照与拍摄角度），可直接用于模型训练/测试：
-
-`WPLDD/`
-`├── 白粉病/       # 小麦白粉病叶片图像（病斑特征：叶片表面覆盖白色粉状霉层，阻碍气体交换与光合作用，导致叶片逐渐变黄、枯萎）`
-`├── 叶枯病/       # 小麦叶枯病叶片图像（病斑特征：叶片枯萎、变色，严重时大面积干枯，影响植株生理功能）`
-`├── 叶锈病/       # 小麦叶锈病叶片图像（病斑特征：产生锈色孢子堆，初期黄色或橙色，后期深褐色，使叶片失去光泽、功能衰退）`
-`├── 黄斑叶枯病/   # 小麦黄斑叶枯病叶片图像（病斑特征：初期为褐色小斑点，随病情发展扩大并连接成片，对叶片损害较大）`
-`└── 健康植株/     # 健康小麦植株图像（特征：叶片鲜绿、形态舒展有光泽，整体生长旺盛，无病害或虫害迹象）`
+```
+WPLDD/
+├── 白粉病/       # 小麦白粉病叶片图像（病斑特征：叶片表面覆盖白色粉状霉层，阻碍气体交换与光合作用，导致叶片逐渐变黄、枯萎）
+├── 叶枯病/       # 小麦叶枯病叶片图像（病斑特征：叶片枯萎、变色，严重时大面积干枯，影响植株生理功能）
+├── 叶锈病/       # 小麦叶锈病叶片图像（病斑特征：产生锈色孢子堆，初期黄色或橙色，后期深褐色，使叶片失去光泽、功能衰退）
+├── 黄斑叶枯病/   # 小麦黄斑叶枯病叶片图像（病斑特征：初期为褐色小斑点，随病情发展扩大并连接成片，对叶片损害较大）
+└── 健康植株/     # 健康小麦植株图像（特征：叶片鲜绿、形态舒展有光泽，整体生长旺盛，无病害或虫害迹象）
+```
 ## 4. 实验环境配置
 
 ### 4.1 依赖安装
 
 推荐使用 Anaconda 创建虚拟环境，确保依赖版本匹配（避免兼容性问题）：
 
-
-`` 1. 创建并激活虚拟环境
+```bash
+ 1. 创建并激活虚拟环境
 conda create -n enbo-wheat python=3.12
-conda activate enbo-wheat``
- ``2. 安装 PyTorch 与 TorchVision（需适配 CUDA 版本，示例为 CUDA 12.1；CPU 用户可替换为 cpu 版本）
+conda activate enbo-wheat
+ 2. 安装 PyTorch 与 TorchVision（需适配 CUDA 版本，示例为 CUDA 12.1；CPU 用户可替换为 cpu 版本）
 pip install torch==2.6.0 torchvision==0.22.1 --index-url https://download.pytorch.org/whl/cu121``
- ``3. 安装其他依赖库（数据处理、可视化、模型工具等）
+ 3. 安装其他依赖库（数据处理、可视化、模型工具等）
 pip install numpy~=2.0.2 matplotlib~=3.9.4 opencv-python~=4.12.0.88
 pip install pandas~=2.3.1 pillow~=11.2.1 torchviz~=0.0.3 xlwt~=1.3.0
-pip install tqdm~=4.67.1 timm~=1.0.15``
-
+pip install tqdm~=4.67.1 timm~=1.0.15
+```
 
 ### 4.2 硬件要求
 
@@ -102,17 +103,17 @@ ENBO 与主流深度学习模型在小麦叶片病害分类任务上的性能对
 ### 6.1 模型训练
 
 运行 `train.py` 脚本启动训练，支持通过参数调整训练配置，示例命令（适配小麦叶片病害数据集）：
-
-`python train.py \`
- `--data-path ./WPLDD \`
- `--num-classes 5 \`
-` --epochs 100 \`
-` --batch-size 8 \`
-` --lr 0.001 \`
- `--use-bam True \`
- `--use-odconv True \`
- `--device cuda:0`
-
+```bash
+python train.py \
+ --data-path ./WPLDD \
+ --num-classes 5 \
+ --epochs 100 \
+ --batch-size 8 \
+ --lr 0.001 \
+ --use-bam True \
+ --use-odconv True \
+ --device cuda:0
+```
 **关键参数说明：**
 
 |参数名|含义|默认值|
@@ -145,12 +146,12 @@ ENBO 与主流深度学习模型在小麦叶片病害分类任务上的性能对
 #### 单张图像预测
 
 使用训练好的权重进行单张小麦叶片图像预测，运行 `predict.py` 脚本，示例命令：
-
-`python predict.py \`
-` --image-path ./test.jpg \`
-` --weights ./weights/best_model.pth \`
- `--device cuda:0`
-
+```bash
+python predict.py \
+ --image-path ./test.jpg \
+ --weights ./weights/best_model.pth \
+ --device cuda:0
+```
 预测输出示例：
 
 `输入图像：./test.jpg`
@@ -164,45 +165,46 @@ ENBO 与主流深度学习模型在小麦叶片病害分类任务上的性能对
 ### 6.3 错误样本分析
 
 使用 `select_incorrect_samples.py` 筛选验证集中预测错误的样本，用于模型诊断与数据清洗，示例命令：
-
-`python select_incorrect_samples.py \`
-` --data-path ./WPLDD \`
-` --weights ./weights/best_model.pth \`
-` --batch-size 8 \`
-` --device cuda:0`
-
+```bash
+python select_incorrect_samples.py \
+ --data-path ./WPLDD \
+ --weights ./weights/best_model.pth \
+ --batch-size 8 \
+ --device cuda:0
+```
 **输出文件：**
 
 -   `error_records.csv`：UTF-8 编码，包含 `file_path`, `true_label`, `predicted_label` 三列；
     
 -   控制台输出各类别准确率及总体准确率统计，帮助定位易混淆类别。
 ## 7. 项目文件结构
-
-`ENBO-Wheat-Disease/`
-`├── Wheat/                       # 小麦叶片病害数据集`
-`│   ├── 白粉病/                   # 白粉病叶片图像（白色粉状霉层）`
-`│   ├── 叶枯病/                   # 叶枯病叶片图像（叶片枯萎、干枯）`
-`│   ├── 叶锈病/                   # 叶锈病叶片图像（锈色孢子堆）`
-`│   ├── 黄斑叶枯病/                # 黄斑叶枯病叶片图像（褐色斑点扩展成片）`
-`│   └── 健康植株/                 # 健康小麦叶片图像（鲜绿、无病斑）`
-`├── batch_prediction_results/    # 批量预测结果输出目录`
-`├── efficientnetv2_predictor/    # 模型预测结果保存目录`
-`├── folder_prediction_result/    # 文件夹预测结果统计文件`
-`├── bam.py                       # BAM 注意力模块实现`
-`├── odconv.py                    # ODConv 动态卷积模块实现`
-`├── model.py                     # 改进 EfficientNetV2 核心代码`
-`├── my_dataset.py                # 自定义 Dataset 类`
-`├── utils.py                     # 工具函数（数据划分、训练/验证循环）`
-`├── train.py                     # 模型训练脚本`
-`├── predict.py                   # 单张/批量预测脚本`
-`├── test_bam.py                  # BAM 模块测试脚本`
-`├── scconv.py                    # 其他卷积模块（备选）`
-`├── diagnosis.py.py                         # 辅助测试脚本`
-`├── class_indices.json           # 类别索引映射文件`
-`├── labels.json                  # 标签映射文件（备用）`
-`├── pre_efficientnetv2-s.pth     # 预训练权重（可选）`
-`├── prediction_results.txt       # 单次预测结果记录`
-`└── README.md                    # 项目说明文档`
+```
+ENBO-Wheat-Disease/
+├── Wheat/                       # 小麦叶片病害数据集
+│   ├── 白粉病/                   # 白粉病叶片图像（白色粉状霉层）
+│   ├── 叶枯病/                   # 叶枯病叶片图像（叶片枯萎、干枯）
+│   ├── 叶锈病/                   # 叶锈病叶片图像（锈色孢子堆）
+│   ├── 黄斑叶枯病/                # 黄斑叶枯病叶片图像（褐色斑点扩展成片）
+│   └── 健康植株/                 # 健康小麦叶片图像（鲜绿、无病斑）
+├── batch_prediction_results/    # 批量预测结果输出目录
+├── efficientnetv2_predictor/    # 模型预测结果保存目录
+├── folder_prediction_result/    # 文件夹预测结果统计文件
+├── bam.py                       # BAM 注意力模块实现
+├── odconv.py                    # ODConv 动态卷积模块实现
+├── model.py                     # 改进 EfficientNetV2 核心代码
+├── my_dataset.py                # 自定义 Dataset 类
+├── utils.py                     # 工具函数（数据划分、训练/验证循环）
+├── train.py                     # 模型训练脚本
+├── predict.py                   # 单张/批量预测脚本
+├── test_bam.py                  # BAM 模块测试脚本
+├── scconv.py                    # 其他卷积模块（备选）
+├── diagnosis.py.py                         # 辅助测试脚本
+├── class_indices.json           # 类别索引映射文件
+├── labels.json                  # 标签映射文件（备用）
+├── pre_efficientnetv2-s.pth     # 预训练权重（可选）
+├── prediction_results.txt       # 单次预测结果记录
+└── README.md                    # 项目说明文档
+```
 ## 8. 已知问题与注意事项
 
 问题类型
@@ -250,21 +252,21 @@ CUDA 兼容性
 
 ### 9.1 引用方式
 论文处于投刊阶段，正式发表后将更新 BibTeX 引用格式，当前可临时引用：
-
-`@article{xu2025enbo,`
-` title={ENBO: A Novel Deep Learning Classification Model for Wheat Disease Identification},`
-` author={Xu, Laixiang and Zhao, Tianhao and Wu, Longguo and Bijani, Madineh and Du, Xiaojie and Zhao, Junmin},`
-` journal={待定},`
-` year={2025},`
-` note={Manuscript submitted for publication}`
-`}`
-
+```bibtex
+@article{xu2025enbo,
+ title={ENBO: A Novel Deep Learning Classification Model for Wheat Disease Identification},
+ author={Xu, Laixiang and Zhao, Tianhao and Wu, Longguo and Bijani, Madineh and Du, Xiaojie and Zhao, Junmin},
+ journal={待定},
+ year={2025},
+ note={Manuscript submitted for publication}
+}
+```
 ### 9.2 联系方式
 
 若遇到代码运行问题或学术交流需求，请联系：
 
-`- 徐来祥：xulaixiang@hainanu.edu.cn`
+- 徐来祥：xulaixiang@hainanu.edu.cn
     
-`- 赵天浩：1798124446@qq.com`
+- 赵天浩：1798124446@qq.com
     
 -   GitHub Issue：直接在本仓库提交 Issue，会在 1‑3 个工作日内回复。
