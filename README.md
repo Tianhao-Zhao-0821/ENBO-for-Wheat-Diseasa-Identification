@@ -265,8 +265,6 @@ CUDA 兼容性
 
 若遇到代码运行问题或学术交流需求，请联系：
 
-- 徐来祥：xulaixiang@hainanu.edu.cn
-    
-- 赵天浩：1798124446@qq.com
+- 赵天浩：zhaotianhao@huuc.edu.cn
     
 -   GitHub Issue：直接在本仓库提交 Issue，会在 1‑3 个工作日内回复。
